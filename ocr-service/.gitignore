@@ -2,6 +2,7 @@
 venv_ocr/
 venv/
 env/
+.env/
 .venv/
 
 # Python
