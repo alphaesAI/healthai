@@ -1,0 +1,119 @@
+# ===============================================
+# SABI ETL CONFIGURATION
+# ===============================================
+
+# -----------------------------------------------
+# CONNECTORS
+# -----------------------------------------------
+connectors:
+
+  # Gmail API connector
+  gmail:
+    type: gmail
+    credentials: "credentials.json"
+    token: "token.json"
+
+
+  # Elasticsearch connector (if needed later)
+  elasticsearch:
+    connector: elasticsearch
+    hosts:
+      - "http://localhost:9200"
+    use_ssl: false
+    verify_certs: false
+    timeout: 30
+
+  # Postgres connector (if needed later)
+  postgres:
+    connector: postgres
+    conn_id: "postgres_structured_source"
+    host: "localhost"
+    port: 5432
+    user: "logi"
+    password: "12345"
+    database: "sabi"
+
+
+# -----------------------------------------------
+# EXTRACTORS
+# -----------------------------------------------
+extractors:
+
+  # Gmail Email Extractor
+  gmail_extractor:
+    type: gmail            # matches ExtractorFactory.register("gmail", GmailExtractor)
+    connector: gmail       # MUST match connectors.gmail key
+    download_dir: "/media/logi/New Volume/github/logibsc/sabi-vaayaadi/project/downloads"
+    # max_emails: 50         # optional: limit extraction
+    # gmail_query: ""        # optional: filter emails (empty = all)
+
+
+# -----------------------------------------------
+# TRANSFORMERS (OPTIONAL, if you have textractor)
+# -----------------------------------------------
+# transformers:
+
+#   # Example textractor transformer
+#   textractor:
+#     type: textractor
+#     model: "default"       # or any config your transformer expects
+
+
+# -----------------------------------------------
+# PIPELINE
+# -----------------------------------------------
+pipeline:
+  connector: gmail
+  extractor: gmail_extractor
+  transformer: textractor  # optional
+  write_output: true
+  output_dir: "/media/logi/New Volume/github/logibsc/sabi-vaayaadi/project/output"
+
+# -----------------------------------------------
+# TRANSFORMERS
+# -----------------------------------------------
+
+transformers:
+  textractor:
+    type: textractor
+    model: "default"
+  gmail_transformer:
+    transformer: data_transformer
+    textractor:
+      paragraphs: true
+      sections: true
+      sentences: true
+      minlength: 20
+      maxlength: 512
+      backend: pypdf2
+    filetohtml: {}
+
+# -----------------------------------------------
+# EMBEDDINGS
+# -----------------------------------------------
+
+embeddings:
+  path: sentence-transformers/all-MiniLM-L6-v2
+  method: mock
+  dimension: 384
+  content: true
+  objects: text
+  batch: 1000
+  gpu: false
+  backend: elasticsearch
+  elasticsearch:
+    hosts: ["http://localhost:9200"]
+    index_name: dense_vectors
+    dimension: 384
+    vector_field: vector
+    id_field: doc_id
+    similarity: cosine
+  database:
+    type: elasticsearch
+    index_name: index_db_documents
+    content: true
+
+# database:
+#   type: elasticsearch
+#   index_name: index_db_documents
+#   content: true
