@@ -61,8 +61,6 @@ Thumbs.db
 *.tmp
 *.temp
 
-
-# upgrade the codebase for using paddleocr pip install "paddlepaddle==2.6.1" and make pytessaract as a fallback method.
-
-# activate the venv install this version upgrade teh entire codebase.
-# follow the conditions. i hope you know what are those conditions.
+# Credentials
+credentials.json
+token.json
