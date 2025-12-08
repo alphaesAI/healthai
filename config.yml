@@ -1,0 +1,224 @@
+tabular:
+  idcolumn: null
+  textcolumns: null
+  content: false
+
+textractor:
+  paragraphs: true
+  sections: true
+
+segmentation:
+  sentences: true
+  minlength: 20
+  maxlength: 512
+
+# workflow:
+#   processdata:
+#     schedule:
+#       cron: "*/1 * * * *"
+#       elements:
+#         - "D:\\data_architect\\esai\\testfile.csv"
+#       iterations: 3
+#     tasks:
+#       - action: tabular
+
+chroma: {}
+
+mcp: true
+
+# agent:
+#   tier1agent:
+#     method: "tool"
+#     max_iterations: 9
+
+#     tools:
+#       - python
+#       - websearch
+#       - name: add_numbers
+#         description: Add two numbers together
+#         target: esai.agent.mathtools.add_numbers
+#         inputs:
+#           a:
+#             type: int
+#             description: First number
+#           b:
+#             type: int
+#             description: Second number
+
+#       - name: multiply
+#         description: Multiply two numbers
+#         target: esai.agent.mathtools.multiply_numbers
+#         inputs:
+#           a:
+#             type: int
+#             description: First number
+#           b:
+#             type: int
+#             description: Second number
+
+#   medicalagent:
+#     method: "tool"
+#     max_iterations: 9
+
+#     tools:
+#       - name: speechtotext
+#         description: convert speech into text
+#         target: esai.pipeline.audio.inference.SpeechToText
+#         inputs:
+#           audio_file:
+#             type: string
+#             description: Path to the audio file
+#           model:
+#             type: string
+#             description: model for converting speech into text
+#         provider: ${HF_PROVIDER}
+#         api_key: ${HF_TOKEN}
+
+llm:
+  method: litellm         
+  path: llama-3.1-8b-instant
+  api_base: https://api.groq.com/openai/v1
+  api_key: ${GROQ_API_KEY}
+  temperature: 0.7
+
+# -----------------------------------------------
+# CONNECTORS
+# -----------------------------------------------
+# connectors:
+
+#   # Gmail API connector
+#   gmail:
+#     type: gmail
+#     credentials: "/media/logi/New Volume/github/logibsc/sabi-vaayaadi/credentials.json"
+#     token: "/media/logi/New Volume/github/logibsc/sabi-vaayaadi/token.json"
+
+
+#   # Elasticsearch connector (if needed later)
+#   elasticsearch:
+#     connector: elasticsearch
+#     hosts:
+#       - "http://localhost:9200"
+#     use_ssl: false
+#     verify_certs: false
+#     timeout: 30
+
+#   # Postgres connector (if needed later)
+#   postgres:
+#     connector: postgres
+#     conn_id: "postgres_structured_source"
+#     host: "localhost"
+#     port: 5432
+#     user: "logi"
+#     password: "12345"
+#     database: "sabi"
+
+
+# # -----------------------------------------------
+# # EXTRACTORS
+# # -----------------------------------------------
+# extractors:
+
+#   # Gmail Email Extractor
+#   gmail_extractor:
+#     type: gmail        
+#     connector: gmail      
+#     download_dir: "/media/logi/New Volume/github/logibsc/sabi-vaayaadi/project/downloads"
+#     # max_emails: 50      
+#     # gmail_query: ""      
+
+
+# # -----------------------------------------------
+# # TRANSFORMERS
+# # -----------------------------------------------
+
+# transformers:
+
+#   # Example textractor transformer
+#   textractor:
+#     type: textractor
+#     model: "default"      
+
+
+# # -----------------------------------------------
+# # PIPELINE
+# # -----------------------------------------------
+# pipeline:
+#   connector: gmail
+#   extractor: gmail_extractor
+#   transformer: textractor 
+#   write_output: true
+#   output_dir: "/media/logi/New Volume/github/logibsc/sabi-vaayaadi/project/output"
+
+# # -----------------------------------------------
+# # TRANSFORMERS
+# # -----------------------------------------------
+
+# transformers:
+#   gmail_transformer:
+#     transformer: data_transformer     
+#     textractor:
+#       paragraphs: true
+#       sections: true
+#       sentences: true
+#       minlength: 20
+#       maxlength: 512
+#       backend: "pypdf2" 
+
+#     filetohtml: {}
+
+# # -----------------------------------------------
+# # EMBEDDINGS
+# # -----------------------------------------------
+
+# embeddings:
+#   path: "sentence-transformers/all-MiniLM-L6-v2"  
+#   method: "mock"  
+#   dimension: 384  
+#   content: true  
+#   objects: "text" 
+
+#   # Indexing settings
+#   batch: 1000  
+#   gpu: false  
+
+#   # ANN (Approximate Nearest Neighbor) configuration - use Elasticsearch
+#   backend: "elasticsearch"  
+#   elasticsearch:
+#     hosts: ["http://localhost:9200"]
+#     index_name: "index_dense_vectors"
+#     dimension: 384
+#     vector_field: "vector"
+#     id_field: "doc_id"
+#     similarity: "cosine"
+
+#   # Database settings - use Elasticsearch (at root level, not nested)
+#   type: "elasticsearch"
+#   hosts: ["http://localhost:9200"]
+#   index_name: "index_db_documents"
+
+# # Database Configuration
+# database:
+#   type: elasticsearch
+#   connection_id: "elasticsearch"
+#   index_name: "index_db_documents"
+#   content: true
+#   mappings:
+#     properties:
+#       id: {type: keyword}
+#       text: {type: text}
+#       tags: {type: keyword}
+#       metadata: {type: object, enabled: false}
+
+# # ANN/Dense Configuration
+# ann:
+#   type: elasticsearch
+#   connection_id: "elasticsearch"
+#   index_name: "index_dense_vectors"
+#   dimension: 384
+#   vector_field: "vector"
+#   id_field: "doc_id"
+#   similarity: "cosine"
+#   mappings:
+#     properties:
+#       timestamp: {type: date}
+#       category: {type: keyword}
