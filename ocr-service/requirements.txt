@@ -1,0 +1,18 @@
+# OCR Service Dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+pillow==10.1.0
+pytesseract==0.3.10
+requests==2.32.5
+
+# PaddleOCR Dependencies
+paddlepaddle>=3.2.0
+paddleocr>=3.3.0
+opencv-contrib-python==4.10.0.84
+
+# Development dependencies (optional)
+# pytest==7.4.0
+# pytest-asyncio==0.21.0
+# black==23.7.0
+# flake8==6.0.0

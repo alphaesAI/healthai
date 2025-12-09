@@ -1,0 +1,61 @@
+# OCR Service Configuration
+
+# File upload settings
+upload:
+  max_file_size_mb: 50
+  allowed_extensions:
+    - .jpg
+    - .jpeg
+    - .png
+    - .bmp
+    - .tiff
+    - .tif
+    - .pdf
+
+# OCR engine settings
+ocr:
+  primary_engine: "paddleocr"
+  fallback_engine: "tesseract"
+  default_language: "en"
+  supported_languages:
+    paddleocr:
+      - en
+      - ch
+      - japan
+      - korean
+      - fr
+      - german
+      - spanish
+      - arabic
+      - tamil
+      - hindi
+    tesseract:
+      - eng
+      - tam
+      - hin
+      - fra
+      - deu
+      - spa
+      - ara
+      - jpn
+      - kor
+      - chi_sim
+      - chi_tra
+
+# Service settings
+service:
+  name: "OCR Service"
+  version: "1.0.0"
+  host: "0.0.0.0"
+  port: 8001
+  debug: true
+  
+# CORS settings
+cors:
+  allow_origins:
+    - "*"
+  allow_credentials: true
+  allow_methods:
+    - "*"
+  allow_headers:
+    - "*"
