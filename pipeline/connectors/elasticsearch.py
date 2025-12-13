@@ -1,12 +1,11 @@
 from elasticsearch import Elasticsearch
 import os
 from typing import Any, Dict, Optional, List
-from airflow.hooks.base_hook import BaseHook
 from .base import BaseConnector
 
 
 class ElasticsearchConnector(BaseConnector):
-    """Elasticsearch connector using Airflow connection ID."""
+    """Elasticsearch connector using YAML configuration."""
     
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -15,39 +14,36 @@ class ElasticsearchConnector(BaseConnector):
         self._connection_info = {}
     
     def connect(self) -> None:
-        """Establish Elasticsearch connection using Airflow connection or direct config."""
+        """Establish Elasticsearch connection using YAML configuration."""
         try:
-            conn_params = {}
+            # Get hosts configuration from YAML
+            hosts = self.config.get('connection', {}).get('hosts', [])
+            if not hosts:
+                # Fallback to environment variable or default
+                default_hosts = os.getenv('ELASTICSEARCH_HOSTS', 'http://localhost:9200')
+                hosts = default_hosts.split(',') if isinstance(default_hosts, str) else [default_hosts]
             
-            # Check if using Airflow connection ID or direct hosts configuration
-            if self.connection_id:
-                # Get connection from Airflow
-                airflow_conn = BaseHook.get_connection(self.connection_id)
-                
-                # Build connection parameters
-                conn_params = {
-                    'hosts': [{'host': airflow_conn.host, 'port': airflow_conn.port or 9200}],
-                    'http_auth': (airflow_conn.login, airflow_conn.password) if airflow_conn.login else None
-                }
-            else:
-                # Use direct hosts configuration from YAML
-                hosts = self.config.get('hosts', [])
-                if not hosts:
-                    # Fallback to environment variable or default
-                    default_hosts = os.getenv('ELASTICSEARCH_HOSTS', 'http://localhost:9200')
-                    hosts = default_hosts.split(',') if isinstance(default_hosts, str) else [default_hosts]
-                
-                conn_params = {
-                    'hosts': hosts if isinstance(hosts, list) else [hosts]
-                }
+            conn_params = {
+                'hosts': hosts if isinstance(hosts, list) else [hosts]
+            }
             
             # Add any additional config
-            conn_params.update(self.config.get('connection_params', {}))
+            connection_params = self.config.get('connection', {}).get('connection_params', {})
+            conn_params.update(connection_params)
             
             # Remove None values
             conn_params = {k: v for k, v in conn_params.items() if v is not None}
             
-            self._client = Elasticsearch(**conn_params)
+            # Create client with version compatibility
+            try:
+                self._client = Elasticsearch(**conn_params)
+            except TypeError:
+                # Fallback for older elasticsearch versions
+                if 'use_ssl' in conn_params:
+                    conn_params.pop('use_ssl')
+                if 'verify_certs' in conn_params:
+                    conn_params.pop('verify_certs')
+                self._client = Elasticsearch(**conn_params)
             
             # Test connection and store info
             info = self._client.info()
@@ -93,11 +89,9 @@ class ElasticsearchConnector(BaseConnector):
             
             return {
                 "status": "connected",
-                "connection_id": self.connection_id,
                 "cluster_name": info.get('cluster_name'),
                 "version": info.get('version', {}).get('number'),
-                "host": self._connection_info.get('host'),
-                "port": self._connection_info.get('port'),
+                "hosts": self._connection_info.get('hosts', []),
                 "cluster_health": health.get('status'),
                 "number_of_nodes": health.get('number_of_nodes')
             }

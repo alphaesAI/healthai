@@ -2,39 +2,39 @@ import psycopg2
 import os
 from psycopg2 import sql
 from typing import Any, Dict, Optional
-from airflow.hooks.base_hook import BaseHook
 from .base import BaseConnector
 
 
 class PostgresConnector(BaseConnector):
-    """PostgreSQL connector using Airflow connection ID."""
+    """PostgreSQL connector using YAML configuration."""
     
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
-        self.connection_id = config.get('connection_id')
+        self.config = config
         self._connection = None
         self._cursor = None
     
     def connect(self) -> None:
-        """Establish PostgreSQL connection using Airflow connection."""
+        """Establish PostgreSQL connection using YAML configuration."""
         try:
-            if not self.connection_id:
-                raise ValueError("Connection ID is required for PostgreSQL connector")
-            
-            # Get connection from Airflow
-            airflow_conn = BaseHook.get_connection(self.connection_id)
+            # Get connection configuration from YAML
+            connection_config = self.config.get('connection', {})
             
             # Build connection parameters
             conn_params = {
-                'host': airflow_conn.host,
-                'port': airflow_conn.port or int(os.getenv('POSTGRES_DEFAULT_PORT', '5432')),
-                'database': airflow_conn.schema or airflow_conn.conn_type,
-                'user': airflow_conn.login,
-                'password': airflow_conn.password
+                'host': connection_config.get('host', os.getenv('POSTGRES_HOST', 'localhost')),
+                'port': connection_config.get('port', int(os.getenv('POSTGRES_PORT', '5432'))),
+                'database': connection_config.get('database', os.getenv('POSTGRES_DATABASE')),
+                'user': connection_config.get('user', os.getenv('POSTGRES_USER')),
+                'password': connection_config.get('password', os.getenv('POSTGRES_PASSWORD'))
             }
             
+            # Remove None values
+            conn_params = {k: v for k, v in conn_params.items() if v is not None}
+            
             # Add any additional config
-            conn_params.update(self.config.get('connection_params', {}))
+            connection_params = connection_config.get('connection_params', {})
+            conn_params.update(connection_params)
             
             self._connection = psycopg2.connect(**conn_params)
             self._cursor = self._connection.cursor()
@@ -77,7 +77,6 @@ class PostgresConnector(BaseConnector):
             
             return {
                 "status": "connected",
-                "connection_id": self.connection_id,
                 "database": self._connection.get_dsn_parameters().get('dbname'),
                 "host": self._connection.get_dsn_parameters().get('host'),
                 "port": self._connection.get_dsn_parameters().get('port'),

@@ -1,76 +1,26 @@
-# Connectors Configuration
-# This file contains endpoint dependencies and connection configurations
-
-# Connector configurations with endpoints
 connectors:
-  # PostgreSQL connector
-  postgres:
-    type: postgres
-    router: "PostgresRouter"
-    connection:
-      host: "localhost"
-      port: 5432
-      database: "healthai"
-      user: "postgres"
-      password: "${POSTGRES_PASSWORD}"
-      connection_params:
-        connect_timeout: 30
-        application_name: "healthai_pipeline"
-    endpoints:
-      - "execute_query"
-      - "execute_many"
-      - "test_connection"
-      - "get_connection_info"
-    dependencies:
-      - "psycopg2"
-      - "airflow"
-  
+
+  # Gmail API connector
+  gmail:
+    type: gmail
+    credentials_path: "credentials.json"
+    token_path: "token.json"
+
   # Elasticsearch connector
   elasticsearch:
     type: elasticsearch
-    router: "ElasticsearchRouter"
     connection:
-      hosts: ["http://localhost:9200"]
+      hosts:
+        - "http://localhost:9200"
       connection_params:
         timeout: 30
-        max_retries: 3
-    endpoints:
-      - "search"
-      - "index_document"
-      - "get_document"
-      - "delete_document"
-      - "bulk_index"
-      - "count"
-      - "test_connection"
-      - "get_connection_info"
-    dependencies:
-      - "elasticsearch"
-      - "airflow"
-  
-  # Gmail connector
-  gmail:
-    type: gmail
-    router: "GmailRouter"
-    connection:
-      credentials_path: "${GMAIL_CREDENTIALS_PATH}"
-      token_path: "${GMAIL_TOKEN_PATH}"
-      scopes: "https://www.googleapis.com/auth/gmail.readonly"
-      api_version: "v1"
-      auth_port: "0"
-    endpoints:
-      - "test_connection"
-      - "get_connection_info"
-      - "connect"
-      - "disconnect"
-    dependencies:
-      - "google-api-python-client"
-      - "google-auth"
-      - "google-auth-oauthlib"
-      - "google-auth-httplib2"
 
-# Router configurations
-routers:
-  base_router: "router.base_router.BaseRouter"
-  postgres_router: "router.postgres_router.PostgresRouter"
-  elasticsearch_router: "router.elasticsearch_router.ElasticsearchRouter"
-  gmail_router: "router.gmail_router.GmailRouter"
+  # Postgres connector
+  postgres:
+    type: postgres
+    connection:
+      host: "localhost"
+      port: 5432
+      database: "postgres"
+      user: "logi"
+      password: "logi"

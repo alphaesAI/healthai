@@ -12,7 +12,6 @@ from .gmail import GmailConnector
 from .factory import ConnectorFactory
 from .registry import *  # Register all connectors
 from .manager import ConnectorManager
-from .config import config_manager
 
 __all__ = [
     'BaseConnector',
@@ -20,8 +19,7 @@ __all__ = [
     'ElasticsearchConnector',
     'GmailConnector',
     'ConnectorFactory',
-    'ConnectorManager',
-    'config_manager'
+    'ConnectorManager'
 ]
 
 __version__ = '1.0.0'

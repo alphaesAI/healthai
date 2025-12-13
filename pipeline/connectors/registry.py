@@ -8,7 +8,5 @@ from .factory import ConnectorFactory
 
 # Register available connectors
 ConnectorFactory.register("postgres", PostgresConnector)
-ConnectorFactory.register("postgresql", PostgresConnector)
 ConnectorFactory.register("elasticsearch", ElasticsearchConnector)
-ConnectorFactory.register("es", ElasticsearchConnector)
 ConnectorFactory.register("gmail", GmailConnector)
