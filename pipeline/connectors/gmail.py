@@ -73,3 +73,47 @@ class GmailConnector(BaseConnector):
             "credentials_path": self.credentials_path,
             "token_path": self.token_path,
         }
+
+    def list_messages(self, query: str = ""):
+        """List Gmail messages with optional query filter."""
+        if not self.service:
+            raise Exception("Not connected to Gmail service")
+        
+        results = self.service.users().messages().list(userId="me", q=query).execute()
+        messages = results.get("messages", [])
+        
+        # Handle pagination
+        while "nextPageToken" in results:
+            page_token = results["nextPageToken"]
+            results = self.service.users().messages().list(
+                userId="me", q=query, pageToken=page_token
+            ).execute()
+            messages.extend(results.get("messages", []))
+        
+        return messages
+
+    def get_message(self, message_id: str):
+        """Get full Gmail message by ID."""
+        if not self.service:
+            raise Exception("Not connected to Gmail service")
+        
+        message = self.service.users().messages().get(
+            userId="me", id=message_id, format="full"
+        ).execute()
+        return message
+
+    def modify_labels(self, message_id: str, remove_labels: list = None, add_labels: list = None):
+        """Modify labels on a Gmail message."""
+        if not self.service:
+            raise Exception("Not connected to Gmail service")
+        
+        body = {}
+        if remove_labels:
+            body["removeLabelIds"] = remove_labels
+        if add_labels:
+            body["addLabelIds"] = add_labels
+        
+        if body:
+            self.service.users().messages().modify(
+                userId="me", id=message_id, body=body
+            ).execute()
