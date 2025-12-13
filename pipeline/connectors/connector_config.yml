@@ -13,7 +13,7 @@ connectors:
       hosts:
         - "http://localhost:9200"
       connection_params:
-        timeout: 30
+        request_timeout: 30
 
   # Postgres connector
   postgres:

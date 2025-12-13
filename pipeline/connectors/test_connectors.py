@@ -23,3 +23,9 @@ def test_connectors():
 
 if __name__ == "__main__":
     test_connectors()
+
+
+# from elasticsearch import Elasticsearch
+
+# es = Elasticsearch(["http://localhost:9200"])
+# print(es.info())
