@@ -1,35 +1,35 @@
-# Extractors Configuration
-# This file contains endpoint dependencies for all pipeline extractors
+# extractor_config.yml
+# Endpoint-only configuration for pipeline extractors
 
-# Extractor endpoint dependencies
 extractors:
   # PostgreSQL extractor endpoints
   postgres_extractor:
     type: postgres
-    router: "PostgresExtractorRouter"
     endpoints:
-      - "extract_tables"
-      - "extract_table_data"
-      - "get_extraction_state"
-      - "test_connection"
-    dependencies:
-      - "pipeline.connectors.postgres"
-      - "psycopg2"
-  
+      - execute_query
+      - execute_many
+      - get_connection_info
+      - test_connection
+
+  # Elasticsearch extractor endpoints
+  elasticsearch_extractor:
+    type: elasticsearch
+    endpoints:
+      - search
+      - index_document
+      - get_document
+      - update_document
+      - delete_document
+      - get_cluster_info
+      - test_connection
+
   # Gmail extractor endpoints
   gmail_extractor:
     type: gmail
-    router: "GmailExtractorRouter"
     endpoints:
-      - "extract_emails"
-      - "download_attachments"
-      - "get_extraction_state"
-      - "test_connection"
-    dependencies:
-      - "pipeline.connectors.gmail"
-      - "google-api-python-client"
-
-# Router configurations
-routers:
-  postgres_extractor_router: "extractors.router.postgres_extractor_router.PostgresExtractorRouter"
-  gmail_extractor_router: "extractors.router.gmail_extractor_router.GmailExtractorRouter"
+      - list_messages
+      - get_message
+      - send_message
+      - modify_labels
+      - get_profile
+      - test_connection
