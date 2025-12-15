@@ -4,14 +4,11 @@ from typing import Any, Dict, Iterator
 
 
 class BaseExtractor(ABC):
-    def __init__(self, name: str, connector):
+    def __init__(self, name: str, connector, config: Dict[str, Any]):
         self.name = name
         self.connector = connector
+        self.config = config
 
     @abstractmethod
     def extract(self) -> Iterator[Dict[str, Any]]:
-        pass
-
-    @abstractmethod
-    def test_connection(self) -> bool:
         pass

@@ -1,35 +1,17 @@
-# Transformers Configuration
-# This file contains endpoint dependencies for all pipeline transformers
 
-# Transformer endpoint dependencies
 transformers:
-  # Data transformer endpoints
-  data_transformer:
-    type: data_transformer
-    router: "DataTransformerRouter"
-    endpoints:
-      - "transform_text"
-      - "extract_metadata"
-      - "chunk_text"
-      - "test_transformation"
-    dependencies:
-      - "txtai"
-      - "pypdf2"
-  
-  # JSON transformer endpoints
-  json_transformer:
-    type: json_transformer
-    router: "JsonTransformerRouter"
-    endpoints:
-      - "to_json"
-      - "from_json"
-      - "validate_json"
-      - "test_transformation"
-    dependencies:
-      - "json"
-      - "yaml"
-
-# Router configurations
-routers:
-  data_transformer_router: "transformers.router.data_transformer_router.DataTransformerRouter"
-  json_transformer_router: "transformers.router.json_transformer_router.JsonTransformerRouter"
+  textractor:
+    type: textractor
+    model: "default"
+    error_message: "Text extraction failed"
+  gmail_transformer:
+    transformer: data_transformer
+    textractor:
+      paragraphs: true
+      sections: true
+      sentences: true
+      minlength: 20
+      maxlength: 512
+      backend: pypdf2
+    filetohtml: {}
+    error_message: "Gmail transformation failed"

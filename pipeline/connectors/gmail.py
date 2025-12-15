@@ -5,14 +5,16 @@ from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build, Resource
 from .base import BaseConnector
+from .registry import ConnectorRegistry
 
 
 class GmailConnector(BaseConnector):
     """Gmail API connector for fetching emails and attachments."""
 
-    def __init__(self, config: dict):
+    def __init__(self, name: str, config: dict):
         """
         Args:
+            name: Name for the connector instance
             config: dictionary containing keys
                 - credentials_path
                 - token_path
@@ -21,8 +23,8 @@ class GmailConnector(BaseConnector):
                 - auth_port (optional, defaults to 0)
         """
 
-        # Pass config to BaseConnector
-        super().__init__(config)
+        # Pass name and config to BaseConnector
+        super().__init__(name, config)
 
         # Local config
         self.service: Optional[Resource] = None
@@ -102,6 +104,16 @@ class GmailConnector(BaseConnector):
         ).execute()
         return message
 
+    def get_attachment(self, message_id: str, attachment_id: str):
+        """Get Gmail attachment by ID."""
+        if not self.service:
+            raise Exception("Not connected to Gmail service")
+        
+        attachment = self.service.users().messages().attachments().get(
+            userId="me", messageId=message_id, id=attachment_id
+        ).execute()
+        return attachment
+
     def modify_labels(self, message_id: str, remove_labels: list = None, add_labels: list = None):
         """Modify labels on a Gmail message."""
         if not self.service:
@@ -117,3 +129,7 @@ class GmailConnector(BaseConnector):
             self.service.users().messages().modify(
                 userId="me", id=message_id, body=body
             ).execute()
+
+
+# Register the connector
+ConnectorRegistry.register("gmail", GmailConnector)

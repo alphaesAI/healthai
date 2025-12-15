@@ -4,14 +4,23 @@ from .base import BaseExtractor
 
 
 class ExtractorRegistry:
-    _registry: Dict[str, Type[BaseExtractor]] = {}
-
+    """Registry for extractor classes."""
+    
+    _extractors: Dict[str, Type[BaseExtractor]] = {}
+    
     @classmethod
-    def register(cls, extractor_type: str, extractor_cls: Type[BaseExtractor]):
-        cls._registry[extractor_type] = extractor_cls
-
+    def register(cls, extractor_type: str, extractor_class: Type[BaseExtractor]) -> None:
+        """Register an extractor class."""
+        cls._extractors[extractor_type] = extractor_class
+    
     @classmethod
     def get(cls, extractor_type: str) -> Type[BaseExtractor]:
-        if extractor_type not in cls._registry:
-            raise ValueError(f"Extractor '{extractor_type}' not registered")
-        return cls._registry[extractor_type]
+        """Get an extractor class by type."""
+        if extractor_type not in cls._extractors:
+            raise ValueError(f"Extractor type '{extractor_type}' not registered")
+        return cls._extractors[extractor_type]
+    
+    @classmethod
+    def list_extractors(cls) -> list[str]:
+        """List all registered extractor types."""
+        return list(cls._extractors.keys())

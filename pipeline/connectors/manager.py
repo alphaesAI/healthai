@@ -14,16 +14,16 @@ class ConnectorManager:
         """Initialize ConnectorManager with optional config path.
         
         Args:
-            config_path: Path to YAML config file. If None, uses 'connectors.yml'
+            config_path: Path to YAML config file. If None, uses 'connector_config.yml'
         """
         if config_path is None:
-            config_path = os.getenv('CONNECTORS_CONFIG_PATH', 'connectors.yml')
+            config_path = os.path.join(os.path.dirname(__file__), 'connector_config.yml')
         
         self.config_path = config_path
         self._connectors: Dict[str, BaseConnector] = {}
         self._config: Optional[Dict[str, Any]] = None
     
-    def _load_config(self) -> Dict[str, Any]:
+    def load_config(self) -> Dict[str, Any]:
         """Load configuration from YAML file."""
         if self._config is None:
             try:
@@ -36,53 +36,46 @@ class ConnectorManager:
         
         return self._config
     
-    def get_connector(self, connector_name: str) -> BaseConnector:
+    def get_connector(self, name: str) -> BaseConnector:
         """Get or create a connector by name."""
-        if connector_name not in self._connectors:
-            self._connectors[connector_name] = self._create_connector(connector_name)
-        return self._connectors[connector_name]
+        if name not in self._connectors:
+            self._connectors[name] = self._create_connector(name)
+        return self._connectors[name]
     
-    def _create_connector(self, connector_name: str) -> BaseConnector:
+    def _create_connector(self, name: str) -> BaseConnector:
         """Create a connector from configuration."""
-        config = self._load_config()
+        config = self.load_config()
         connectors = config.get('connectors', {})
         
-        if connector_name not in connectors:
-            raise ValueError(f"Connector '{connector_name}' not found in config")
+        if name not in connectors:
+            raise ValueError(f"Connector '{name}' not found in config")
         
-        connector_config = connectors[connector_name]
+        connector_config = connectors[name]
         connector_type = connector_config.get('type')
         
         if not connector_type:
-            raise ValueError(f"Connector '{connector_name}' missing 'type' field")
+            raise ValueError(f"Connector '{name}' missing 'type' field")
         
-        return ConnectorFactory.create(connector_type, connector_config)
+        return ConnectorFactory.create(connector_type, name, connector_config)
     
     def list_connectors(self) -> list[str]:
         """List all configured connector names."""
-        config = self._load_config()
+        config = self.load_config()
         return list(config.get('connectors', {}).keys())
     
-    def test_all_connections(self) -> Dict[str, bool]:
-        """Test all configured connections."""
-        results = {}
+    def connect_all(self) -> None:
+        """Connect all configured connectors."""
         for name in self.list_connectors():
-            try:
-                connector = self.get_connector(name)
-                # Ensure connector is connected before testing
-                if not connector.is_connected():
-                    connector.connect()
-                results[name] = connector.test_connection()
-            except Exception:
-                results[name] = False
-        
-        return results
+            connector = self.get_connector(name)
+            if not connector.is_connected():
+                connector.connect()
     
     def disconnect_all(self) -> None:
         """Disconnect all connectors."""
         for connector in self._connectors.values():
             try:
-                connector.disconnect()
+                if connector.is_connected():
+                    connector.disconnect()
             except Exception:
                 pass
         

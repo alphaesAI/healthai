@@ -3,15 +3,14 @@ import os
 from psycopg2 import sql
 from typing import Any, Dict, Optional
 from .base import BaseConnector
+from .registry import ConnectorRegistry
 
 
 class PostgresConnector(BaseConnector):
     """PostgreSQL connector using YAML configuration."""
     
-    def __init__(self, config: Dict[str, Any]):
-        super().__init__(config)
-        self.config = config
-        self._connection = None
+    def __init__(self, name: str, config: Dict[str, Any]):
+        super().__init__(name, config)
         self._cursor = None
     
     def connect(self) -> None:
@@ -54,36 +53,9 @@ class PostgresConnector(BaseConnector):
         except Exception as e:
             raise ConnectionError(f"Error disconnecting from PostgreSQL: {e}")
     
-    def test_connection(self) -> bool:
-        """Test PostgreSQL connection."""
-        try:
-            if not self._connection:
-                return False
-            
-            self._cursor.execute("SELECT 1")
-            result = self._cursor.fetchone()
-            return result[0] == 1
-        except Exception:
-            return False
-    
-    def get_connection_info(self) -> Dict[str, Any]:
-        """Get PostgreSQL connection information."""
-        if not self._connection:
-            return {"status": "disconnected"}
-        
-        try:
-            self._cursor.execute("SELECT version()")
-            version = self._cursor.fetchone()[0]
-            
-            return {
-                "status": "connected",
-                "database": self._connection.get_dsn_parameters().get('dbname'),
-                "host": self._connection.get_dsn_parameters().get('host'),
-                "port": self._connection.get_dsn_parameters().get('port'),
-                "version": version
-            }
-        except Exception as e:
-            return {"status": "error", "error": str(e)}
+    def get_connection(self):
+        """Return the live database connection."""
+        return self._connection
     
     def execute_query(self, query: str, params: Optional[tuple] = None) -> list:
         """Execute a query and return results."""
@@ -93,21 +65,17 @@ class PostgresConnector(BaseConnector):
         try:
             self._cursor.execute(query, params)
             if self._cursor.description:
-                return self._cursor.fetchall()
+                # Get column names from cursor description
+                columns = [desc[0] for desc in self._cursor.description]
+                rows = self._cursor.fetchall()
+                # Convert to list of dictionaries
+                return [dict(zip(columns, row)) for row in rows]
             self._connection.commit()
             return []
         except Exception as e:
             self._connection.rollback()
             raise e
-    
-    def execute_many(self, query: str, params_list: list) -> None:
-        """Execute a query with multiple parameter sets."""
-        if not self._connection or not self._cursor:
-            raise ConnectionError("Not connected to PostgreSQL")
-        
-        try:
-            self._cursor.executemany(query, params_list)
-            self._connection.commit()
-        except Exception as e:
-            self._connection.rollback()
-            raise e
+
+
+# Register the connector
+ConnectorRegistry.register("postgres", PostgresConnector)

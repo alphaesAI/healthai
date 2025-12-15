@@ -5,19 +5,22 @@ from .registry import ExtractorRegistry
 
 
 class ElasticsearchExtractor(BaseExtractor):
-    def __init__(self, name: str, connector):
-        super().__init__(name, connector)
+    def __init__(self, name: str, connector, config: Dict[str, Any]):
+        super().__init__(name, connector, config)
 
-    def extract(self, source: str = None, **kwargs) -> Iterator[Dict[str, Any]]:
-        index = source or kwargs.get('index', '_all')
-        query = kwargs.get('query', {"query": {"match_all": {}}})
+    def extract(self) -> Iterator[Dict[str, Any]]:
+        """Extract documents from Elasticsearch based on configuration."""
+        index = self.config.get('index', '_all')
+        query = self.config.get('query', {"query": {"match_all": {}}})
+        size = self.config.get('size', 100)
+        
+        # Add size to query if not present
+        if 'size' not in query:
+            query['size'] = size
         
         results = self.connector.search(index=index, body=query)
         for hit in results.get('hits', {}).get('hits', []):
             yield hit['_source']
-
-    def test_connection(self) -> bool:
-        return self.connector.test_connection()
 
 
 ExtractorRegistry.register("elasticsearch", ElasticsearchExtractor)

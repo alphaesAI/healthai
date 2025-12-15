@@ -1,37 +1,46 @@
 # pipeline/extractors/postgres.py
 from typing import Iterator, Dict, Any
 from .base import BaseExtractor
-from .state_manager import StateManager
 from .registry import ExtractorRegistry
 
 
 class PostgresExtractor(BaseExtractor):
-    def __init__(self, name: str, connector):
-        super().__init__(name, connector)
-        self.state = StateManager()
+    def __init__(self, name: str, connector, config: Dict[str, Any]):
+        super().__init__(name, connector, config)
 
-    def extract(self, source: str = None, **kwargs) -> Iterator[Dict[str, Any]]:
-        # Default query if none provided
-        query = kwargs.get("query", "SELECT * FROM users")
+    def extract(self) -> Iterator[Dict[str, Any]]:
+        """Extract data from PostgreSQL table."""
+        table_name = self.config.get('table_name')
+        schema = self.config.get('schema', 'public')
+        columns = self.config.get('columns')
+        extraction_mode = self.config.get('extraction_mode', 'full')
+        date_column = self.config.get('date_column')
+        batch_size = self.config.get('batch_size', 1000)
+        order_by = self.config.get('order_by')
         
-        # Add incremental filter if state exists
-        last_date = self.state.get(self.name)
-        if last_date and "WHERE" not in query:
-            query += f" WHERE updated_at > '{last_date}'"
-        elif last_date and "WHERE" in query:
-            query += f" AND updated_at > '{last_date}'"
-
-        rows = self.connector.execute_query(query=query)
-
+        # Build query
+        if columns:
+            columns_str = ', '.join(columns)
+        else:
+            columns_str = '*'
+        
+        query = f"SELECT {columns_str} FROM {schema}.{table_name}"
+        
+        # Add incremental filter if specified
+        if extraction_mode == 'incremental_date' and date_column:
+            # For now, just extract all data - state management would be added here
+            pass
+        
+        # Add ordering
+        if order_by:
+            query += f" ORDER BY {order_by}"
+        
+        # Execute query
+        rows = self.connector.execute_query(query)
+        
         for row in rows:
-            # Row is already a dictionary, yield as-is
             yield row
-            # Update state with the last row's timestamp
-            if "updated_at" in row:
-                self.state.set(self.name, row["updated_at"])
-
-    def test_connection(self) -> bool:
-        return self.connector.test_connection()
 
 
+# Register the extractor
 ExtractorRegistry.register("postgres", PostgresExtractor)

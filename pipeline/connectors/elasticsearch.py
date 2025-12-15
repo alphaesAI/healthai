@@ -2,14 +2,14 @@ from elasticsearch import Elasticsearch
 import os
 from typing import Any, Dict, Optional, List
 from .base import BaseConnector
+from .registry import ConnectorRegistry
 
 
 class ElasticsearchConnector(BaseConnector):
     """Elasticsearch connector using YAML configuration."""
     
-    def __init__(self, config: Dict[str, Any]):
-        super().__init__(config)
-        self.config = config
+    def __init__(self, name: str, config: Dict[str, Any]):
+        super().__init__(name, config)
         self._client = None
         self._connection_info = {}
     
@@ -242,3 +242,7 @@ class ElasticsearchConnector(BaseConnector):
     def close(self) -> None:
         """Close the Elasticsearch client."""
         self.disconnect()
+
+
+# Register the connector
+ConnectorRegistry.register("elasticsearch", ElasticsearchConnector)

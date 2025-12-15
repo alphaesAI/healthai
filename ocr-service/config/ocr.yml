@@ -11,6 +11,7 @@ upload:
     - .tiff
     - .tif
     - .pdf
+  error_message: "File upload failed - invalid file type or size"
 
 # OCR engine settings
 ocr:
@@ -41,6 +42,7 @@ ocr:
       - kor
       - chi_sim
       - chi_tra
+  error_message: "OCR processing failed"
 
 # Service settings
 service:
@@ -48,6 +50,7 @@ service:
   version: "1.0.0"
   host: "0.0.0.0"
   port: 8001
+  error_message: "OCR service unavailable"
   debug: true
   
 # CORS settings

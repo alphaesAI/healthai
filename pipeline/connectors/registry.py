@@ -1,12 +1,27 @@
 """Connector registration module."""
 
-from .postgres import PostgresConnector
-from .elasticsearch import ElasticsearchConnector
-from .gmail import GmailConnector
-from .factory import ConnectorFactory
+from typing import Dict, Type
+from .base import BaseConnector
 
 
-# Register available connectors
-ConnectorFactory.register("postgres", PostgresConnector)
-ConnectorFactory.register("elasticsearch", ElasticsearchConnector)
-ConnectorFactory.register("gmail", GmailConnector)
+class ConnectorRegistry:
+    """Registry for connector classes."""
+    
+    _connectors: Dict[str, Type[BaseConnector]] = {}
+    
+    @classmethod
+    def register(cls, connector_type: str, connector_class: Type[BaseConnector]) -> None:
+        """Register a connector class."""
+        cls._connectors[connector_type] = connector_class
+    
+    @classmethod
+    def get(cls, connector_type: str) -> Type[BaseConnector]:
+        """Get a connector class by type."""
+        if connector_type not in cls._connectors:
+            raise ValueError(f"Connector type '{connector_type}' not registered")
+        return cls._connectors[connector_type]
+    
+    @classmethod
+    def list_connectors(cls) -> list[str]:
+        """List all registered connector types."""
+        return list(cls._connectors.keys())

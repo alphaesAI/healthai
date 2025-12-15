@@ -1,73 +1,28 @@
-"""Base transformer class for ETL pipeline."""
-
+# pipeline/transformers/base.py
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
-import pandas as pd
+from typing import Any, Dict
 
 
 class BaseTransformer(ABC):
     """
     Abstract base class for all transformers.
-    Defines the interface for data transformation.
     """
-    
-    def __init__(self, **kwargs):
-        """
-        Initialize the base transformer.
-        
-        Args:
-            **kwargs: Additional transformer parameters
-        """
-        self.config = kwargs
-    
+
+    def __init__(self, name: str):
+        self.name = name
+
     @abstractmethod
-    def transform(self, data: pd.DataFrame, **kwargs) -> Any:
-        """
-        Transform the input data.
-        
-        Args:
-            data: Input data as pandas DataFrame
-            **kwargs: Additional transformation parameters
-            
-        Returns:
-            Transformed data
-        """
-        pass
-    
-    @abstractmethod
-    def get_output_schema(self, input_schema: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Get the output schema based on input schema.
-        
-        Args:
-            input_schema: Schema of input data
-            
-        Returns:
-            Schema of output data
-        """
-        pass
-    
-    def validate_input(self, data: pd.DataFrame) -> bool:
-        """
-        Validate input data.
-        
-        Args:
-            data: Input data to validate
-            
-        Returns:
-            True if data is valid
-        """
-        return data is not None and not data.empty
-    
+    def transform(self, data: Any, **kwargs) -> Any:
+        """Transform input data into output data"""
+        raise NotImplementedError
+
+    def test_transform(self) -> bool:
+        """Basic sanity check"""
+        return True
+
     def get_transform_stats(self) -> Dict[str, Any]:
-        """
-        Get transformation statistics.
-        
-        Returns:
-            Dictionary with transformation statistics
-        """
+        """Optional stats"""
         return {
-            "total_transformed": getattr(self, '_total_transformed', 0),
-            "total_failed": getattr(self, '_total_failed', 0),
-            "last_transform_time": getattr(self, '_last_transform_time', None)
+            "transformer": self.name,
+            "status": "ok",
         }
