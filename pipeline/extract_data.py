@@ -13,35 +13,24 @@ def main():
     connector_manager = ConnectorManager()
     extractor_manager = ExtractorManager()
     
-    # 1. PostgreSQL FULL Extraction
-    print("1. PostgreSQL FULL Extraction:")
-    extractor_manager.run_extraction('users')
+    # 1. PostgreSQL Extraction
+    print("1. PostgreSQL Extraction:")
+    extractor_manager.run_extraction('postgres')
     print("   Completed")
     
     print()
     
-    # 2. PostgreSQL Incremental Date Extraction
-    print("2. PostgreSQL INCREMENTAL DATE Extraction:")
-    extractor_manager.run_extraction('orders')
+    # 2. Gmail Extraction
+    print("2. Gmail Extraction:")
+    extractor_manager.run_extraction('gmail')
     print("   Completed")
     
     print()
     
-    # 3. Gmail UNREAD Emails Extraction
-    print("3. Gmail UNREAD Emails Extraction:")
-    gmail_connector = connector_manager.get_connector('gmail')
-    gmail_connector.connect()
-    
-    gmail_config = {
-        'query': 'is:unread',
-        'mark_as_read': False
-    }
-    
-    from pipeline.extractors.factory import ExtractorFactory
-    extractor = ExtractorFactory.create('gmail', gmail_connector, gmail_config)
-    
-    data = list(extractor.extract())
-    print(f"   Extracted {len(data)} unread emails")
+    # 3. Elasticsearch Extraction
+    print("3. Elasticsearch Extraction:")
+    extractor_manager.run_extraction('elasticsearch')
+    print("   Completed")
     
     print("\n=== Extraction Complete ===")
 

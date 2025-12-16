@@ -30,40 +30,49 @@ class GmailExtractor(BaseExtractor):
             Full Gmail message objects with attachments
         """
         # Get configuration
+        labels = self.config.get('labels', ['INBOX'])
         query = self.config.get('query', 'is:unread')
         mark_as_read = self.config.get('mark_as_read', False)
-        max_results = self.config.get('max_results', 50)
-
-        messages = self.connector.list_messages(query=query)
+        batch_size = self.config.get('batch_size', 100)
         
         # Collect all messages for storage
         all_messages = []
-
-        for msg in messages:
-            message_id = msg.get("id")
-            if not message_id:
-                continue
-
-            # Fetch full message
-            message = self.connector.get_message(message_id)
+        
+        # Extract from each label
+        for label in labels:
+            # Build query with label
+            label_query = f"label:{label} {query}".strip()
             
-            # Extract and store attachments
-            if 'payload' in message and 'parts' in message['payload']:
-                message['attachments'] = self._extract_and_store_attachments(message, message_id)
+            messages = self.connector.list_messages(query=label_query)
             
-            all_messages.append(message)
-            yield message
+            for msg in messages[:batch_size]:  # Limit by batch_size
+                message_id = msg.get("id")
+                if not message_id:
+                    continue
 
-            # Optionally mark as read
-            if mark_as_read:
-                try:
-                    self.connector.modify_labels(
-                        message_id=message_id,
-                        remove_labels=["UNREAD"],
-                    )
-                except Exception:
-                    # Minimal error handling by design
-                    pass
+                # Fetch full message
+                message = self.connector.get_message(message_id)
+                
+                # Add label context
+                message['_source_label'] = label
+                
+                # Extract and store attachments
+                if 'payload' in message and 'parts' in message['payload']:
+                    message['attachments'] = self._extract_and_store_attachments(message, message_id)
+                
+                all_messages.append(message)
+                yield message
+
+                # Optionally mark as read
+                if mark_as_read:
+                    try:
+                        self.connector.modify_labels(
+                            message_id=message_id,
+                            remove_labels=["UNREAD"],
+                        )
+                    except Exception:
+                        # Minimal error handling by design
+                        pass
         
         # Store all messages using writer
         from .writer import write

@@ -120,7 +120,7 @@
             }
           ],
           "body": {
-            "attachmentId": "ANGjdJ-FY61QfCRxq3ifHyWOy3X3fOhZOHia9h5bWTi3vjGVEgNtmvCwfdf-d0_pkLUf4btde8ar8Z43wU5T9314dysMCYURGs18LgCEvamSH7uiQo-JYjloKL9u9FRcgku_fMBZa3nZUyydEauXtqC1WPCO5RYPVpYbqOg5tzza_sZ0nyc_n9YSJC6YmlWWr0lskOBBEL9kOTdDmOeLitYjn8LDMefGrYqozhrXKiqsHOIqshyqzqSDirfQMyQ4QWSXJU5lGu4L48PMVA0GDHDOqG98w_2UHf_bF5eXy2V51O-JIONc7mUaYzLRfj4",
+            "attachmentId": "ANGjdJ9X6uOh3Kk8aWmR-cz3F7M1rwtvbiCgnCZ67Sp_7_Veg2G6jgU6vlB5ydhnc5dspVBvN9EtGckbIqR9UOCDaDqEuc4-5LlluL_RUmMzTaeBk4UomRJxGI4meWSU4bo7P2jmA96qKc28Yh-9ZbsIPTKVhO_7crKLGjGnv09lrIWsJuDJucjf1PeOeU1KYFIcOoODLdCgsNh1yAB8GVa5v34ltW_8cyg7MJVgJyZGu4kI0v-SX39lTsJi59ppn6Hw1anGzhlnVUnDTvFXD3on72mfrHYe2e9p4E7gxQC4XDY0mtmUSvriUDFGRmg",
             "size": 27937
           }
         }
@@ -129,10 +129,11 @@
     "sizeEstimate": 39306,
     "historyId": "2627",
     "internalDate": "1763224420000",
+    "_source_label": "INBOX",
     "attachments": [
       {
         "filename": "attachment.pdf",
-        "attachment_id": "ANGjdJ-FY61QfCRxq3ifHyWOy3X3fOhZOHia9h5bWTi3vjGVEgNtmvCwfdf-d0_pkLUf4btde8ar8Z43wU5T9314dysMCYURGs18LgCEvamSH7uiQo-JYjloKL9u9FRcgku_fMBZa3nZUyydEauXtqC1WPCO5RYPVpYbqOg5tzza_sZ0nyc_n9YSJC6YmlWWr0lskOBBEL9kOTdDmOeLitYjn8LDMefGrYqozhrXKiqsHOIqshyqzqSDirfQMyQ4QWSXJU5lGu4L48PMVA0GDHDOqG98w_2UHf_bF5eXy2V51O-JIONc7mUaYzLRfj4",
+        "attachment_id": "ANGjdJ9X6uOh3Kk8aWmR-cz3F7M1rwtvbiCgnCZ67Sp_7_Veg2G6jgU6vlB5ydhnc5dspVBvN9EtGckbIqR9UOCDaDqEuc4-5LlluL_RUmMzTaeBk4UomRJxGI4meWSU4bo7P2jmA96qKc28Yh-9ZbsIPTKVhO_7crKLGjGnv09lrIWsJuDJucjf1PeOeU1KYFIcOoODLdCgsNh1yAB8GVa5v34ltW_8cyg7MJVgJyZGu4kI0v-SX39lTsJi59ppn6Hw1anGzhlnVUnDTvFXD3on72mfrHYe2e9p4E7gxQC4XDY0mtmUSvriUDFGRmg",
         "mime_type": "application/pdf",
         "stored_path": "data/attachments/19a885d87e921ba0/attachment.pdf"
       }
@@ -259,7 +260,7 @@
             }
           ],
           "body": {
-            "attachmentId": "ANGjdJ_sFO7PILWecEpImCsmvT_wbhL5d35lrqOQeeAoZ9XM09Q2ewerflxqRRih5gRx7Y5halIGp21o3Xlca5DCXtabxn3jZ8vkJ2q__xSpCvwSUeX0i8QbAn3bpeGBzrruA3ttDtiafKY37u9gXFM4ujIFhfkBT6l4J7m3EClN3zWVClY47nKHHrgqfsPgeLKQmF2TzOwsqPFFGTa27JGUVBBTq2YiZHQ3ZZlcgsaJ4hYdH196Frmhn0OflNxdJtBkUwu_pW8O4jNGb-xhnNS2c58SYJNHrTBNRImzOYvoKTX6E5ZxL1Fmt1E7sAM",
+            "attachmentId": "ANGjdJ-6UuPdBvzC49OIa-mf8teP0UavY4MR98r7BqGeS41i0f_3gcgFJPJ0ukcod8UshhQiUNou0p7W_8-0eIM3rxfvK446BTeCmxb8qSkKaZdPiYItn-_QSktAJ-2opdIB8vMTSRBcc5SCQGCK4a4qcwuEr0XWm-uY_HVqZn2TkNYMhB35jdlYrqPRNCS-Blzyw_X6w87n2ccVhDXcv9aX_6dukO06YKnlXy3Hh-5TXlYEjwT36JRZuQMaf5kQCkqA_DlGlRHjmZI3mLO6MEkbKpXKtxPEaBMhDI4WiVXcFEY8_Ko-3PbaCNEwlqU",
             "size": 3348
           }
         }
@@ -268,10 +269,11 @@
     "sizeEstimate": 5719,
     "historyId": "2626",
     "internalDate": "1763224093000",
+    "_source_label": "INBOX",
     "attachments": [
       {
         "filename": "attachment.txt",
-        "attachment_id": "ANGjdJ_sFO7PILWecEpImCsmvT_wbhL5d35lrqOQeeAoZ9XM09Q2ewerflxqRRih5gRx7Y5halIGp21o3Xlca5DCXtabxn3jZ8vkJ2q__xSpCvwSUeX0i8QbAn3bpeGBzrruA3ttDtiafKY37u9gXFM4ujIFhfkBT6l4J7m3EClN3zWVClY47nKHHrgqfsPgeLKQmF2TzOwsqPFFGTa27JGUVBBTq2YiZHQ3ZZlcgsaJ4hYdH196Frmhn0OflNxdJtBkUwu_pW8O4jNGb-xhnNS2c58SYJNHrTBNRImzOYvoKTX6E5ZxL1Fmt1E7sAM",
+        "attachment_id": "ANGjdJ-6UuPdBvzC49OIa-mf8teP0UavY4MR98r7BqGeS41i0f_3gcgFJPJ0ukcod8UshhQiUNou0p7W_8-0eIM3rxfvK446BTeCmxb8qSkKaZdPiYItn-_QSktAJ-2opdIB8vMTSRBcc5SCQGCK4a4qcwuEr0XWm-uY_HVqZn2TkNYMhB35jdlYrqPRNCS-Blzyw_X6w87n2ccVhDXcv9aX_6dukO06YKnlXy3Hh-5TXlYEjwT36JRZuQMaf5kQCkqA_DlGlRHjmZI3mLO6MEkbKpXKtxPEaBMhDI4WiVXcFEY8_Ko-3PbaCNEwlqU",
         "mime_type": "text/plain",
         "stored_path": "data/attachments/19a885887a8585b5/attachment.txt"
       }
@@ -443,6 +445,7 @@
     "sizeEstimate": 13740,
     "historyId": "1985",
     "internalDate": "1763219712000",
+    "_source_label": "INBOX",
     "attachments": []
   },
   {
@@ -611,6 +614,7 @@
     "sizeEstimate": 12252,
     "historyId": "1860",
     "internalDate": "1763164371000",
+    "_source_label": "INBOX",
     "attachments": []
   },
   {
@@ -779,6 +783,287 @@
     "sizeEstimate": 12337,
     "historyId": "1860",
     "internalDate": "1763164204000",
+    "_source_label": "INBOX",
     "attachments": []
+  },
+  {
+    "id": "19a885d87e921ba0",
+    "threadId": "19a885d0b00707d9",
+    "labelIds": [
+      "UNREAD",
+      "IMPORTANT",
+      "SENT",
+      "INBOX"
+    ],
+    "snippet": "here is an sample pdf file to test the email connector.",
+    "payload": {
+      "partId": "",
+      "mimeType": "multipart/mixed",
+      "filename": "",
+      "headers": [
+        {
+          "name": "MIME-Version",
+          "value": "1.0"
+        },
+        {
+          "name": "Date",
+          "value": "Sat, 15 Nov 2025 22:03:40 +0530"
+        },
+        {
+          "name": "Message-ID",
+          "value": "<CAFy0ej_+44Gg9P_RLQOgJgp6=vJ3gEMmdetHN41kMryw7FBokw@mail.gmail.com>"
+        },
+        {
+          "name": "Subject",
+          "value": "pdf attachement testing"
+        },
+        {
+          "name": "From",
+          "value": "alphaesai Genaitest <alphaesaigenaitest@gmail.com>"
+        },
+        {
+          "name": "To",
+          "value": "alphaesai Genaitest <alphaesaigenaitest@gmail.com>"
+        },
+        {
+          "name": "Content-Type",
+          "value": "multipart/mixed; boundary=\"00000000000051cf6d0643a4ad59\""
+        }
+      ],
+      "body": {
+        "size": 0
+      },
+      "parts": [
+        {
+          "partId": "0",
+          "mimeType": "multipart/alternative",
+          "filename": "",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "multipart/alternative; boundary=\"00000000000051cf6c0643a4ad57\""
+            }
+          ],
+          "body": {
+            "size": 0
+          },
+          "parts": [
+            {
+              "partId": "0.0",
+              "mimeType": "text/plain",
+              "filename": "",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "text/plain; charset=\"UTF-8\""
+                }
+              ],
+              "body": {
+                "size": 57,
+                "data": "aGVyZSBpcyBhbiBzYW1wbGUgcGRmIGZpbGUgdG8gdGVzdCB0aGUgZW1haWwgY29ubmVjdG9yLg0K"
+              }
+            },
+            {
+              "partId": "0.1",
+              "mimeType": "text/html",
+              "filename": "",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "text/html; charset=\"UTF-8\""
+                }
+              ],
+              "body": {
+                "size": 78,
+                "data": "PGRpdiBkaXI9Imx0ciI-aGVyZSBpcyBhbiBzYW1wbGUgcGRmIGZpbGUgdG8gdGVzdCB0aGUgZW1haWwgY29ubmVjdG9yLjwvZGl2Pg0K"
+              }
+            }
+          ]
+        },
+        {
+          "partId": "1",
+          "mimeType": "application/pdf",
+          "filename": "attachment.pdf",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/pdf; name=\"attachment.pdf\""
+            },
+            {
+              "name": "Content-Disposition",
+              "value": "attachment; filename=\"attachment.pdf\""
+            },
+            {
+              "name": "Content-Transfer-Encoding",
+              "value": "base64"
+            },
+            {
+              "name": "X-Attachment-Id",
+              "value": "f_mi0iajcb0"
+            },
+            {
+              "name": "Content-ID",
+              "value": "<f_mi0iajcb0>"
+            }
+          ],
+          "body": {
+            "attachmentId": "ANGjdJ-P5A5_RNcrLabPXkgZgtPdzxVHQ9R0WLR2gaiRHeOZUYAkr-w0If81HmM7MKyHwhLucNHM9qVStfSBNwN0lolUaxESpGWiFL9eKni8ilFjQaC2gOzQau0Otot-ZddUFx9rOzdbWOyWJHikkmoNSviDxNGq7PsbCh31sNnV-MuL9ZJDfT3gFtYu0zXF2k0rIzp26zytOWB-l3At-BB7U70R-Fozea9Mf5ydsdZrHT3Kjryu-ZRSYGvxZ4fwF100B-vU9lETMrkzmKiIFoMpSQLWR88dwdBibvzJlxCDyTb2_H-wKug5h_U9YZ0",
+            "size": 27937
+          }
+        }
+      ]
+    },
+    "sizeEstimate": 39306,
+    "historyId": "2627",
+    "internalDate": "1763224420000",
+    "_source_label": "SENT",
+    "attachments": [
+      {
+        "filename": "attachment.pdf",
+        "attachment_id": "ANGjdJ-P5A5_RNcrLabPXkgZgtPdzxVHQ9R0WLR2gaiRHeOZUYAkr-w0If81HmM7MKyHwhLucNHM9qVStfSBNwN0lolUaxESpGWiFL9eKni8ilFjQaC2gOzQau0Otot-ZddUFx9rOzdbWOyWJHikkmoNSviDxNGq7PsbCh31sNnV-MuL9ZJDfT3gFtYu0zXF2k0rIzp26zytOWB-l3At-BB7U70R-Fozea9Mf5ydsdZrHT3Kjryu-ZRSYGvxZ4fwF100B-vU9lETMrkzmKiIFoMpSQLWR88dwdBibvzJlxCDyTb2_H-wKug5h_U9YZ0",
+        "mime_type": "application/pdf",
+        "stored_path": "data/attachments/19a885d87e921ba0/attachment.pdf"
+      }
+    ]
+  },
+  {
+    "id": "19a885887a8585b5",
+    "threadId": "19a8857f4a077ddf",
+    "labelIds": [
+      "UNREAD",
+      "IMPORTANT",
+      "SENT",
+      "INBOX"
+    ],
+    "snippet": "here is an sample txt document to test the attachment pasring in email connector.",
+    "payload": {
+      "partId": "",
+      "mimeType": "multipart/mixed",
+      "filename": "",
+      "headers": [
+        {
+          "name": "MIME-Version",
+          "value": "1.0"
+        },
+        {
+          "name": "Date",
+          "value": "Sat, 15 Nov 2025 21:58:13 +0530"
+        },
+        {
+          "name": "Message-ID",
+          "value": "<CAFy0ej-8DswteJ-ALLZL3=Uy6zo15gmOvyroQTuf2SyH9uYBcQ@mail.gmail.com>"
+        },
+        {
+          "name": "Subject",
+          "value": "txt attachement testing"
+        },
+        {
+          "name": "From",
+          "value": "alphaesai Genaitest <alphaesaigenaitest@gmail.com>"
+        },
+        {
+          "name": "To",
+          "value": "alphaesai Genaitest <alphaesaigenaitest@gmail.com>"
+        },
+        {
+          "name": "Content-Type",
+          "value": "multipart/mixed; boundary=\"000000000000ca1f320643a499ef\""
+        }
+      ],
+      "body": {
+        "size": 0
+      },
+      "parts": [
+        {
+          "partId": "0",
+          "mimeType": "multipart/alternative",
+          "filename": "",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "multipart/alternative; boundary=\"000000000000ca1f2f0643a499ed\""
+            }
+          ],
+          "body": {
+            "size": 0
+          },
+          "parts": [
+            {
+              "partId": "0.0",
+              "mimeType": "text/plain",
+              "filename": "",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "text/plain; charset=\"UTF-8\""
+                }
+              ],
+              "body": {
+                "size": 84,
+                "data": "aGVyZSBpcyBhbiBzYW1wbGUgdHh0IGRvY3VtZW50IHRvIHRlc3QgdGhlIGF0dGFjaG1lbnQgcGFzcmluZyBpbiBlbWFpbA0KY29ubmVjdG9yLg0K"
+              }
+            },
+            {
+              "partId": "0.1",
+              "mimeType": "text/html",
+              "filename": "",
+              "headers": [
+                {
+                  "name": "Content-Type",
+                  "value": "text/html; charset=\"UTF-8\""
+                }
+              ],
+              "body": {
+                "size": 104,
+                "data": "PGRpdiBkaXI9Imx0ciI-aGVyZSBpcyBhbiBzYW1wbGUgdHh0IGRvY3VtZW50IHRvIHRlc3QgdGhlIGF0dGFjaG1lbnQgcGFzcmluZyBpbiBlbWFpbCBjb25uZWN0b3IuPC9kaXY-DQo="
+              }
+            }
+          ]
+        },
+        {
+          "partId": "1",
+          "mimeType": "text/plain",
+          "filename": "attachment.txt",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "text/plain; charset=\"UTF-8\"; name=\"attachment.txt\""
+            },
+            {
+              "name": "Content-Disposition",
+              "value": "attachment; filename=\"attachment.txt\""
+            },
+            {
+              "name": "Content-Transfer-Encoding",
+              "value": "base64"
+            },
+            {
+              "name": "X-Attachment-Id",
+              "value": "f_mi0i3hs20"
+            },
+            {
+              "name": "Content-ID",
+              "value": "<f_mi0i3hs20>"
+            }
+          ],
+          "body": {
+            "attachmentId": "ANGjdJ9Icwt9WcSpfW91g4GlHprcVTyj1m8MyElH3V3JCctepdGhe0RenrpxY9i9ZCQmKKRQaeUKb6fh1jE73VoXC6Fe1HUmsO0OgPhPqv-CGavJLXFaZlU_pIakXmwS5CJp_XWP3jo3wSnpr4IdmyklKWXincUoEKwxqNtkTJGm9Ga7NZLR4DwCLTUcoSkojyv2ru6xi-VRIBlGubg1jTh0MzNvGwz1_isxxnSffGtB1m7g4vY4dXXZqmmjVDt2V7glIKw45XMmaxLNh0wUlCpdpB32LyuLF7yiBykZRJi6gr-aVPYC83QvaPxaPDc",
+            "size": 3348
+          }
+        }
+      ]
+    },
+    "sizeEstimate": 5719,
+    "historyId": "2626",
+    "internalDate": "1763224093000",
+    "_source_label": "SENT",
+    "attachments": [
+      {
+        "filename": "attachment.txt",
+        "attachment_id": "ANGjdJ9Icwt9WcSpfW91g4GlHprcVTyj1m8MyElH3V3JCctepdGhe0RenrpxY9i9ZCQmKKRQaeUKb6fh1jE73VoXC6Fe1HUmsO0OgPhPqv-CGavJLXFaZlU_pIakXmwS5CJp_XWP3jo3wSnpr4IdmyklKWXincUoEKwxqNtkTJGm9Ga7NZLR4DwCLTUcoSkojyv2ru6xi-VRIBlGubg1jTh0MzNvGwz1_isxxnSffGtB1m7g4vY4dXXZqmmjVDt2V7glIKw45XMmaxLNh0wUlCpdpB32LyuLF7yiBykZRJi6gr-aVPYC83QvaPxaPDc",
+        "mime_type": "text/plain",
+        "stored_path": "data/attachments/19a885887a8585b5/attachment.txt"
+      }
+    ]
   }
 ]

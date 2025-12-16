@@ -1,75 +1,111 @@
+from datetime import datetime
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from datetime import datetime
+from pathlib import Path
+import logging
+import sys
 
-from pipeline.connectors.factory import ConnectorFactory
-from pipeline.extractors.factory import ExtractorFactory
-from pipeline.transformers.factory import TransformerFactory
+# Add project root to Python path
+project_root = str(Path(__file__).parents[2])
+if project_root not in sys.path:
+    sys.path.append(project_root)
 
+from pipeline.connectors.manager import ConnectorManager
+from pipeline.extractors.manager import ExtractorManager
 
-def run_connectors(**context):
-    connectors = ConnectorFactory.load_from_yaml()
-    results = {}
+# Configure logging
+logger = logging.getLogger(__name__)
 
-    for name, connector in connectors.items():
-        results[name] = connector.fetch()
+# Default arguments for the DAG
+default_args = {
+    'owner': 'healthai',
+    'depends_on_past': False,
+    'start_date': datetime(2024, 1, 1),
+    'retries': 0,
+    'retry_delay': 0,
+}
 
-    context["ti"].xcom_push(key="connector_output", value=results)
+def run_extractor(extractor_name: str):
+    """
+    Run a single extractor as an Airflow task.
+    
+    Args:
+        extractor_name: Name of the extractor to run (must match config)
+    """
+    try:
+        logger.info(f"Starting {extractor_name} extraction")
+        
+        # Initialize managers
+        connector_manager = ConnectorManager()
+        extractor_manager = ExtractorManager()
+        
+        # Run extraction using manager
+        extractor_manager.run_extraction(extractor_name)
+        
+        logger.info(f"Successfully completed {extractor_name} extraction")
+        
+    except Exception as e:
+        logger.error(f"Error in {extractor_name} extraction: {str(e)}")
+        raise
 
-
-def run_extractors(**context):
-    connector_output = context["ti"].xcom_pull(
-        key="connector_output", task_ids="connectors"
-    )
-
-    extractors = ExtractorFactory.load_from_yaml()
-    results = {}
-
-    for name, extractor in extractors.items():
-        results[name] = extractor.extract(connector_output)
-
-    context["ti"].xcom_push(key="extractor_output", value=results)
-
-
-def run_transformers(**context):
-    extractor_output = context["ti"].xcom_pull(
-        key="extractor_output", task_ids="extractors"
-    )
-
-    transformers = TransformerFactory.load_from_yaml()
-    results = {}
-
-    for name, transformer in transformers.items():
-        results[name] = transformer.transform(extractor_output)
-
-    # final output → index / store / send to LLM
-    print("Final transformed data:", results)
-
-
+# Define the DAG
 with DAG(
-    dag_id="healthai_pipeline",
-    start_date=datetime(2024, 1, 1),
-    schedule_interval=None,
+    'healthai_extraction_pipeline',
+    default_args=default_args,
+    description='HealthAI Data Extraction Pipeline',
+    schedule_interval=None,  # Manual trigger or external scheduler
     catchup=False,
-    tags=["healthai"],
+    tags=['healthai', 'extraction'],
 ) as dag:
 
-    connectors_task = PythonOperator(
-        task_id="connectors",
-        python_callable=run_connectors,
-        provide_context=True,
+    # Define tasks for each extractor
+    postgres_task = PythonOperator(
+        task_id='postgres_extractor',
+        python_callable=run_extractor,
+        op_kwargs={'extractor_name': 'postgres'},
+        retries=default_args['retries'],
+        retry_delay=default_args['retry_delay'],
     )
 
-    extractors_task = PythonOperator(
-        task_id="extractors",
-        python_callable=run_extractors,
-        provide_context=True,
+    gmail_task = PythonOperator(
+        task_id='gmail_extractor',
+        python_callable=run_extractor,
+        op_kwargs={'extractor_name': 'gmail'},
+        retries=default_args['retries'],
+        retry_delay=default_args['retry_delay'],
     )
 
-    transformers_task = PythonOperator(
-        task_id="transformers",
-        python_callable=run_transformers,
-        provide_context=True,
+    elasticsearch_task = PythonOperator(
+        task_id='elasticsearch_extractor',
+        python_callable=run_extractor,
+        op_kwargs={'extractor_name': 'elasticsearch'},
+        retries=default_args['retries'],
+        retry_delay=default_args['retry_delay'],
     )
 
-    connectors_task >> extractors_task >> transformers_task
+    # Set task dependencies (run in parallel)
+    [postgres_task, gmail_task, elasticsearch_task]
+
+# DAG Documentation
+dag.doc_md = """
+# HealthAI Extraction Pipeline
+
+## Overview
+This DAG runs data extractors in parallel. Each extractor:
+1. Reads its own configuration from extractor_config.yml
+2. Creates and manages its own connectors
+3. Extracts data from its internal resources (tables/labels/indices)
+4. Saves output to JSON files
+
+## Extractors
+- postgres_extractor: Extracts data from PostgreSQL tables (users, orders, products)
+- gmail_extractor: Extracts emails from Gmail labels (INBOX, SENT)
+- elasticsearch_extractor: Extracts documents from Elasticsearch indices (user_events, audit_logs)
+
+## Design Notes
+- DAG orchestrates at extractor level only (no table/index/label tasks)
+- Each extractor handles its own resource loops internally
+- No XCom or in-memory data passing
+- Output is written to filesystem
+- Connector lifecycle is managed by extractors
+"""

@@ -45,30 +45,31 @@ class ExtractorManager:
     def _create_extractor(self, name: str):
         """Create an extractor from configuration."""
         config = self.load_config()
-        extractors = config.get('extraction', {}).get('tables', [])
         
-        # Find extractor config by table name
-        extractor_config = None
-        for extractor in extractors:
-            if extractor.get('table_name') == name:
-                extractor_config = extractor
-                break
-        
-        if not extractor_config:
+        # Get extractor configuration by name
+        if name not in config:
             raise ValueError(f"Extractor '{name}' not found in config")
         
-        # Get connector name from config or use default
-        connector_name = extractor_config.get('connector', 'postgres')
+        extractor_config = config[name].get('extraction', {})
+        connector_name = extractor_config.get('connector', name)
+        
+        # Get connector
         connector = self.connector_manager.get_connector(connector_name)
         
-        # Create extractor
-        return ExtractorFactory.create('postgres', connector, extractor_config)
+        # Create extractor based on type
+        if name == 'postgres':
+            return ExtractorFactory.create('postgres', connector, extractor_config)
+        elif name == 'gmail':
+            return ExtractorFactory.create('gmail', connector, extractor_config)
+        elif name == 'elasticsearch':
+            return ExtractorFactory.create('elasticsearch', connector, extractor_config)
+        else:
+            raise ValueError(f"Unknown extractor type: {name}")
     
     def list_extractors(self) -> list[str]:
         """List all configured extractor names."""
         config = self.load_config()
-        tables = config.get('extraction', {}).get('tables', [])
-        return [table.get('table_name') for table in tables]
+        return [key for key in config.keys() if key != 'extraction']
     
     def run_extraction(self, name: str) -> None:
         """Run extraction for a specific extractor."""
