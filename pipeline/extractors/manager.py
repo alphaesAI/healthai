@@ -82,10 +82,11 @@ class ExtractorManager:
         # Extract data
         data = list(extractor.extract())
         
-        # Write to project storage
-        output_path = f"extractors/{name}.json"
-        from .writer import write
-        write(data, output_path)
+        # Write to project storage (except Gmail which handles its own writing)
+        if name != 'gmail':
+            output_path = f"extractors/{name}.json"
+            from .writer import write
+            write(data, output_path)
     
     def run_all_extractions(self) -> None:
         """Run all configured extractions."""

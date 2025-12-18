@@ -1,28 +1,23 @@
 # pipeline/transformers/base.py
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Iterator, Tuple, Any, Dict
 
 
 class BaseTransformer(ABC):
     """
-    Abstract base class for all transformers.
+    Abstract base class for data transformers.
     """
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, config: Dict[str, Any]):
         self.name = name
+        self.config = config
 
     @abstractmethod
-    def transform(self, data: Any, **kwargs) -> Any:
-        """Transform input data into output data"""
-        raise NotImplementedError
-
-    def test_transform(self) -> bool:
-        """Basic sanity check"""
-        return True
-
-    def get_transform_stats(self) -> Dict[str, Any]:
-        """Optional stats"""
-        return {
-            "transformer": self.name,
-            "status": "ok",
-        }
+    def transform(self) -> Iterator[Tuple[str, str, list]]:
+        """
+        Transform data into (id, text, tags) tuples.
+        
+        Returns:
+            Iterator of (id, text, tags) tuples
+        """
+        pass

@@ -1,10 +1,20 @@
 # pipeline/transformers/__init__.py
 
-# Auto-register transformers
-from .json_transformer import JsonTransformer
-from .data_transformer import DataTransformer
+# Import transformer classes
+from .base import BaseTransformer
+from .tabular_transformer import TabularTransformer
+from .document_transformer import DocumentTransformer
+from .registry import TransformerRegistry
+from .factory import TransformerFactory
+from .manager import TransformerManager
+from .runner import TransformerRunner
 
 __all__ = [
-    "JsonTransformer",
-    "DataTransformer",
+    "BaseTransformer",
+    "TabularTransformer", 
+    "DocumentTransformer",
+    "TransformerRegistry",
+    "TransformerFactory",
+    "TransformerManager",
+    "TransformerRunner",
 ]
