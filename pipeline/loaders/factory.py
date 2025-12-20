@@ -1,50 +1,53 @@
-"""Factory for creating loader instances."""
+"""
+Factory for creating loader instances - Backend selection factory
+"""
 
-from typing import Any, Dict, Type
-
-from .base import BaseLoader
+from typing import Any, Dict
+from .ingestor import BaseIngestor, SingleIngestor, BulkIngestor
 
 
 class LoaderFactory:
-    """Factory class for creating loader instances."""
+    """
+    Factory class for creating loader instances.
+    
+    Responsibility: Choose backend based on config and return correct ingestor instance.
+    """
 
-    _loaders: Dict[str, Type[BaseLoader]] = {}
-
-    @classmethod
-    def register(cls, loader_type: str, loader_class: Type[BaseLoader]) -> None:
-        """Register a loader type.
-        
-        Args:
-            loader_type: String identifier for the loader.
-            loader_class: Loader class to register.
+    @staticmethod
+    def create_ingestor(config: Dict[str, Any], use_bulk: bool = True) -> BaseIngestor:
         """
-        cls._loaders[loader_type] = loader_class
-
-    @classmethod
-    def create(cls, loader_type: str, config: Dict[str, Any]) -> BaseLoader:
-        """Create a loader instance.
+        Create appropriate ingestor based on backend configuration.
         
         Args:
-            loader_type: Type of loader to create.
-            config: Configuration for the loader.
+            config: Backend configuration containing type and settings
+            use_bulk: Whether to use bulk ingestor (default: True)
             
         Returns:
-            Loader instance.
+            Ingestor instance for the specified backend
             
         Raises:
-            ValueError: If loader type is not registered.
+            ValueError: If unsupported backend type is specified
         """
-        if loader_type not in cls._loaders:
-            raise ValueError(f"Unknown loader type: {loader_type}")
+        backend_type = config.get('type', 'elasticsearch').lower()
         
-        loader_class = cls._loaders[loader_type]
-        return loader_class(**config)
-
-    @classmethod
-    def list_loaders(cls) -> Dict[str, Type[BaseLoader]]:
-        """List all registered loader types.
+        if backend_type == 'elasticsearch':
+            # Choose between bulk and single based on config and parameter
+            if use_bulk and config.get('bulk_enabled', True):
+                return BulkIngestor(config)
+            else:
+                return SingleIngestor(config)
+        elif backend_type == 'opensearch':
+            # Future implementation for OpenSearch
+            raise NotImplementedError("OpenSearch backend not yet implemented")
+        else:
+            raise ValueError(f"Unsupported backend type: {backend_type}")
+    
+    @staticmethod
+    def get_supported_backends() -> list:
+        """
+        Get list of supported backend types.
         
         Returns:
-            Dictionary of registered loader types.
+            List of supported backend names
         """
-        return cls._loaders.copy()
+        return ['elasticsearch', 'opensearch']

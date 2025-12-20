@@ -1,11 +1,16 @@
-"""ETL Loaders for txtai pipeline system."""
+"""Loader Architecture - Pipeline loading components."""
 
-from .base import BaseLoader
+from .runner import LoaderRunner, Chunk
+from .embeddings import EmbeddingAligner
+from .ingestor import SingleIngestor, BulkIngestor, BaseIngestor
 from .factory import LoaderFactory
-from .elasticsearch import ElasticsearchLoader
-from .config_manager import loader_config_manager
 
-# Auto-register loaders
-LoaderFactory.register("elasticsearch", ElasticsearchLoader)
-
-__all__ = ["BaseLoader", "LoaderFactory", "ElasticsearchLoader", "loader_config_manager"]
+__all__ = [
+    "LoaderRunner",
+    "Chunk", 
+    "EmbeddingAligner",
+    "SingleIngestor",
+    "BulkIngestor", 
+    "BaseIngestor",
+    "LoaderFactory"
+]
