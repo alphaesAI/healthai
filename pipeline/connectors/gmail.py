@@ -1,5 +1,5 @@
-import os
 import pickle
+from pathlib import Path
 from typing import Optional
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -30,15 +30,15 @@ class GmailConnector(BaseConnector):
         self.service: Optional[Resource] = None
         self.credentials_path = config.get("credentials_path")
         self.token_path = config.get("token_path")
-        self.scopes = config.get("scopes", os.getenv('GMAIL_SCOPES', "https://www.googleapis.com/auth/gmail.readonly").split(','))
-        self.api_version = config.get("api_version", os.getenv('GMAIL_API_VERSION', 'v1'))
-        self.auth_port = int(config.get("auth_port", os.getenv('GMAIL_AUTH_PORT', '0')))
+        self.scopes = config.get("scopes", ["https://www.googleapis.com/auth/gmail.readonly"])
+        self.api_version = config.get("api_version", 'v1')
+        self.auth_port = int(config.get("auth_port", '0'))
 
     def connect(self) -> None:
         """Authenticate and build Gmail service client."""
         creds = None
 
-        if os.path.exists(self.token_path):
+        if Path(self.token_path).exists():
             with open(self.token_path, "rb") as token:
                 creds = pickle.load(token)
 

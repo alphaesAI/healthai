@@ -1,6 +1,12 @@
 # Loader Configuration
 # Controls embedding generation and backend ingestion
 
+# General configuration
+data_dir: "data"
+config_file: "loader.yml"
+transformed_subdir: "transformed"
+chunk_separator: "_chunk_"
+
 # Embeddings configuration (follows txtai's Embeddings format)
 embeddings:
   enabled: true
@@ -17,6 +23,7 @@ backend:
   bulk_enabled: true
   batch_size: 100
   max_retries: 3
+  success_results: ["created", "updated"]
     
 # Logging configuration
 logging:

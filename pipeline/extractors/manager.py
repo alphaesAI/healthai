@@ -1,5 +1,5 @@
 # pipeline/extractors/manager.py
-import os
+from pathlib import Path
 import yaml
 from typing import Any, Dict
 from .factory import ExtractorFactory
@@ -16,7 +16,7 @@ class ExtractorManager:
             config_path: Path to YAML config file. If None, uses 'extractor_config.yml'
         """
         if config_path is None:
-            config_path = os.path.join(os.path.dirname(__file__), 'extractor_config.yml')
+            config_path = str(Path(__file__).parent / 'extractor_config.yml')
         
         self.config_path = config_path
         self.connector_manager = ConnectorManager()

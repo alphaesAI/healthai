@@ -17,8 +17,36 @@ connectors:
         request_timeout: 30
     error_message: "Elasticsearch connection failed"
 
-  # Postgres connector
-  postgres:
+  # PostgreSQL – Health Database
+  postgres_health:
+    type: postgres
+    connection:
+      host: "localhost"
+      port: 5432
+      database: "health_db"
+      user: "logi"
+      password: "logi"
+      connection_params:
+        connect_timeout: 10
+        application_name: "healthai_health_pipeline"
+    error_message: "Health DB PostgreSQL connection failed"
+
+  # PostgreSQL – Pharma Database
+  postgres_pharma:
+    type: postgres
+    connection:
+      host: "localhost"
+      port: 5432
+      database: "pharma_db"
+      user: "logi"
+      password: "logi"
+      connection_params:
+        connect_timeout: 10
+        application_name: "healthai_pharma_pipeline"
+    error_message: "Pharma DB PostgreSQL connection failed"
+
+  # PostgreSQL – Analytics / Structured Data
+  postgres_analytics:
     type: postgres
     connection:
       host: "localhost"
@@ -26,4 +54,7 @@ connectors:
       database: "structured_data_pipeline"
       user: "logi"
       password: "logi"
-    error_message: "PostgreSQL connection failed"
+      connection_params:
+        connect_timeout: 10
+        application_name: "healthai_analytics_pipeline"
+    error_message: "Analytics PostgreSQL connection failed"

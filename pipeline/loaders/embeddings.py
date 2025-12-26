@@ -33,15 +33,18 @@ class EmbeddingAligner:
         """Initialize txtai Embeddings without indexing."""
         # Create embeddings instance without storage/indexing
         embeddings_config = {
-            "path": self.config.get("path", "sentence-transformers/all-MiniLM-L6-v2"),
-            "content": False,  # Disable content storage
-            "scoring": None,  # Disable scoring
-            "backend": "numpy"  # Use numpy backend for simple vector generation
+            "path": self.config.get("path"),
+            "content": self.config.get("content", False),  # Disable content storage by default
+            "scoring": self.config.get("scoring", None),  # Disable scoring by default
+            "backend": self.config.get("backend", "numpy")  # Use numpy backend by default
         }
+        
+        # Remove None values from config
+        embeddings_config = {k: v for k, v in embeddings_config.items() if v is not None}
         
         # Add any additional txtai Embeddings parameters from config
         for key, value in self.config.items():
-            if key not in ["path", "enabled"]:
+            if key not in ["path", "enabled", "content", "scoring", "backend"]:
                 embeddings_config[key] = value
         
         self.embeddings = Embeddings(embeddings_config)

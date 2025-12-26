@@ -2,10 +2,18 @@
 # Transformer Configuration
 # YAML-driven configuration for data transformers
 
+# General configuration
+data_dir: "data"
+extractors_subdir: "extractors"
+
 transformers:
   postgres_transformer:
     type: tabular
+    default_source: "postgres"
     source: postgres
+    id_column: "id"
+    text_columns: []
+    content_enabled: false
     tabular:
       idcolumn: null
       textcolumns: null
@@ -13,9 +21,15 @@ transformers:
     
   gmail_transformer:
     type: textractor
+    default_source: "gmail"
     source: gmail
     include_attachments: true
     attachment_extensions: [.pdf, .txt, .doc, .docx]
+    chunk_separator: "_chunk_"
+    attachment_separator: "_attachment_"
+    subject_length_limit: 50
+    default_tag: "gmail"
+    document_placeholder: "[Document: {filename}]"
     textractor:
       paragraphs: true
       sections: true

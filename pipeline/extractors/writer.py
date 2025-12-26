@@ -1,7 +1,7 @@
 # pipeline/extractors/writer.py
 import json
-import os
 import base64
+from pathlib import Path
 from typing import Any, Dict, Union
 
 
@@ -13,13 +13,13 @@ def write(data: Union[Dict[str, Any], list], path: str) -> None:
         path: Output file path (relative to project root)
     """
     # Get project root directory
-    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    project_root = Path(__file__).parent.parent.parent
     
     # Create full path relative to project root
-    full_path = os.path.join(project_root, "data", path)
+    full_path = project_root / "data" / path
     
     # Create directory if it doesn't exist
-    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+    full_path.parent.mkdir(parents=True, exist_ok=True)
     
     # Handle Gmail messages with attachments
     if path == 'extractors/gmail.json' and isinstance(data, list):
@@ -30,7 +30,7 @@ def write(data: Union[Dict[str, Any], list], path: str) -> None:
         json.dump(data, f, indent=2, default=str)
 
 
-def _process_gmail_attachments(messages: list, project_root: str) -> list:
+def _process_gmail_attachments(messages: list, project_root: Path) -> list:
     """Process and store attachments from Gmail messages."""
     processed_messages = []
     
@@ -48,7 +48,7 @@ def _process_gmail_attachments(messages: list, project_root: str) -> list:
     return processed_messages
 
 
-def _extract_attachments_from_parts(parts: list, message_id: str, project_root: str) -> list:
+def _extract_attachments_from_parts(parts: list, message_id: str, project_root: Path) -> list:
     """Extract attachments from message parts."""
     attachments = []
     
@@ -58,8 +58,8 @@ def _extract_attachments_from_parts(parts: list, message_id: str, project_root: 
             attachment_id = part['body']['attachmentId']
             
             # Create attachment directory
-            attachments_dir = os.path.join(project_root, "data", "attachments", message_id)
-            os.makedirs(attachments_dir, exist_ok=True)
+            attachments_dir = project_root / "data" / "attachments" / message_id
+            attachments_dir.mkdir(parents=True, exist_ok=True)
             
             # Store attachment info
             attachment_info = {

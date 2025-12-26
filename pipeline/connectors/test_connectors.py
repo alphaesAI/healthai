@@ -2,16 +2,16 @@
 """Test script for connectors."""
 
 import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent))
 
 from .manager import ConnectorManager
 
 def test_connectors():
     """Test all configured connectors."""
     # Use absolute path to config file
-    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'connector_config.yml')
-    manager = ConnectorManager(config_path)
+    config_path = Path(__file__).parent / 'connector_config.yml'
+    manager = ConnectorManager(str(config_path))
     
     print("Available connectors:", manager.list_connectors())
     

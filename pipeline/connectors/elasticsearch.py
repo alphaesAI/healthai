@@ -1,5 +1,4 @@
 from elasticsearch import Elasticsearch
-import os
 from typing import Any, Dict, Optional, List
 from .base import BaseConnector
 from .registry import ConnectorRegistry
@@ -19,9 +18,7 @@ class ElasticsearchConnector(BaseConnector):
             # Get hosts configuration from YAML
             hosts = self.config.get('connection', {}).get('hosts', [])
             if not hosts:
-                # Fallback to environment variable or default
-                default_hosts = os.getenv('ELASTICSEARCH_HOSTS', 'http://localhost:9200')
-                hosts = default_hosts.split(',') if isinstance(default_hosts, str) else [default_hosts]
+                raise ValueError("No hosts configured in YAML configuration")
             
             conn_params = {
                 'hosts': hosts if isinstance(hosts, list) else [hosts]

@@ -28,7 +28,12 @@ class LoaderFactory:
         Raises:
             ValueError: If unsupported backend type is specified
         """
-        backend_type = config.get('type', 'elasticsearch').lower()
+        backend_type = config.get('type')
+        
+        if not backend_type:
+            raise ValueError("Backend type must be specified in config")
+            
+        backend_type = backend_type.lower()
         
         if backend_type == 'elasticsearch':
             # Choose between bulk and single based on config and parameter

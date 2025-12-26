@@ -31,9 +31,10 @@ class BaseElasticsearchIngestor(BaseIngestor):
     def __init__(self, config: Dict[str, Any]):
         """Initialize using connector."""
         self.config = config
-        self.connector_name = config.get('connector_name', 'elasticsearch')
-        self.index_name = config.get('index_name', 'healthai_vectors')
+        self.connector_name = config.get('connector_name')
+        self.index_name = config.get('index_name')
         self.max_retries = config.get('max_retries', 3)
+        self.success_results = config.get('success_results', ['created', 'updated'])
         self.logger = logging.getLogger(__name__)
         
         # Get connector from manager
@@ -92,7 +93,7 @@ class SingleIngestor(BaseElasticsearchIngestor):
                     body=doc
                 )
                 
-                if response.get('result') in ['created', 'updated']:
+                if response.get('result') in self.success_results:
                     self.logger.info(f"Successfully ingested record: {record['chunk_id']}")
                     return True
                     

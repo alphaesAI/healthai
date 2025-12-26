@@ -13,8 +13,14 @@ class DocumentTransformer(BaseTransformer):
 
     def __init__(self, name: str, config: Dict[str, Any]):
         super().__init__(name, config)
+        self.default_source = config.get('default_source')
         self.include_attachments = config.get('include_attachments', True)
         self.attachment_extensions = config.get('attachment_extensions', ['.pdf', '.txt', '.doc', '.docx'])
+        self.chunk_separator = config.get('chunk_separator', '_chunk_')
+        self.attachment_separator = config.get('attachment_separator', '_attachment_')
+        self.subject_length_limit = config.get('subject_length_limit', 50)
+        self.default_tag = config.get('default_tag')
+        self.document_placeholder = config.get('document_placeholder', '[Document: {filename}]')
         
         # Initialize txtai Textractor pipeline with all parameters
         textractor_config = config.get('textractor', {})
@@ -32,8 +38,9 @@ class DocumentTransformer(BaseTransformer):
             Iterator of (id, text, tags) tuples
         """
         # Read extractor output
-        data_dir = Path(__file__).parent.parent.parent / 'data'
-        file_path = data_dir / 'extractors' / f'{self.config.get("source", "gmail")}.json'
+        data_dir = Path(__file__).parent.parent.parent / self.config.get('data_dir', 'data')
+        extractors_subdir = self.config.get('extractors_subdir', 'extractors')
+        file_path = data_dir / extractors_subdir / f'{self.config.get("source", self.default_source)}.json'
         
         if not file_path.exists():
             return
@@ -53,7 +60,7 @@ class DocumentTransformer(BaseTransformer):
                 # Textractor returns list of chunks when segmentation is enabled
                 if isinstance(processed_chunks, list):
                     for i, chunk in enumerate(processed_chunks):
-                        chunk_id = f"{record_id}_chunk_{i}"
+                        chunk_id = f"{record_id}{self.chunk_separator}{i}"
                         tags = self._extract_tags(record)
                         yield (chunk_id, chunk, tags)
                 else:
@@ -63,7 +70,7 @@ class DocumentTransformer(BaseTransformer):
             # Process attachments if enabled
             if self.include_attachments and 'attachments' in record:
                 for attachment in record['attachments']:
-                    attachment_id = f"{record_id}_attachment_{attachment['filename']}"
+                    attachment_id = f"{record_id}{self.attachment_separator}{attachment['filename']}"
                     attachment_text = self._extract_attachment_text(attachment)
                     
                     if attachment_text:
@@ -72,7 +79,7 @@ class DocumentTransformer(BaseTransformer):
                         
                         if isinstance(processed_chunks, list):
                             for i, chunk in enumerate(processed_chunks):
-                                chunk_id = f"{attachment_id}_chunk_{i}"
+                                chunk_id = f"{attachment_id}{self.chunk_separator}{i}"
                                 tags = self._extract_tags(record) + [f"attachment:{attachment['filename']}"]
                                 yield (chunk_id, chunk, tags)
                         else:
@@ -81,12 +88,15 @@ class DocumentTransformer(BaseTransformer):
 
     def _extract_tags(self, record: Dict[str, Any]) -> list:
         """Extract tags from record metadata."""
-        tags = ['gmail']
+        tags = [self.default_tag] if self.default_tag else []
         
         # Add tags from metadata
         metadata = record.get('metadata', {})
         if 'subject' in metadata:
-            tags.append(f"subject:{metadata['subject'][:50]}")
+            subject = metadata['subject']
+            if len(subject) > self.subject_length_limit:
+                subject = subject[:self.subject_length_limit]
+            tags.append(f"subject:{subject}")
         if 'from' in metadata:
             tags.append(f"from:{metadata['from']}")
         if 'labels' in metadata:
@@ -97,7 +107,8 @@ class DocumentTransformer(BaseTransformer):
 
     def _extract_attachment_text(self, attachment: Dict[str, Any]) -> str:
         """Extract text from attachment file."""
-        attachment_path = Path(__file__).parent.parent.parent / 'data' / attachment['path']
+        data_dir = Path(__file__).parent.parent.parent / self.config.get('data_dir', 'data')
+        attachment_path = data_dir / attachment['path']
         
         if not attachment_path.exists():
             return ""
@@ -114,7 +125,7 @@ class DocumentTransformer(BaseTransformer):
         
         # For PDF and other formats, return placeholder for now
         # OCR integration would go here in future
-        if extension in ['.pdf', '.doc', '.docx']:
-            return f"[Document: {attachment['filename']}]"
+        if extension in self.attachment_extensions and extension in ['.pdf', '.doc', '.docx']:
+            return self.document_placeholder.format(filename=attachment['filename'])
         
         return ""

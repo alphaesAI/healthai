@@ -34,11 +34,19 @@ class LoaderRunner:
     """
     
     def __init__(self, config_path: Optional[str] = None):
-        self.data_dir = Path(__file__).parent.parent.parent / 'data'
-        self.config_path = config_path or (Path(__file__).parent / 'loader.yml')
+        # Set default paths first
+        default_data_dir = 'data'
+        default_config_file = 'loader.yml'
+        
+        # Load config first
+        self.config_path = config_path or (Path(__file__).parent / default_config_file)
         self.config = self._load_config()
+        
+        # Now use config for paths
+        self.data_dir = Path(__file__).parent.parent.parent / self.config.get('data_dir', default_data_dir)
         self.embedding_aligner = None
         self.ingestor = None
+        self.chunk_separator = self.config.get('chunk_separator', '_chunk_')
     
     def _load_config(self) -> Dict[str, Any]:
         """Load configuration from YAML file."""
@@ -47,7 +55,8 @@ class LoaderRunner:
     
     def _read_transformed_file(self, transformer_name: str) -> List[Chunk]:
         """Read transformed JSON file and convert to Chunk objects."""
-        file_path = self.data_dir / 'transformed' / f'{transformer_name}.json'
+        transformed_subdir = self.config.get('transformed_subdir', 'transformed')
+        file_path = self.data_dir / transformed_subdir / f'{transformer_name}.json'
         
         if not file_path.exists():
             raise FileNotFoundError(f"Transformed file not found: {file_path}")
@@ -60,9 +69,9 @@ class LoaderRunner:
             # Convert list format back to tuple-like structure
             chunk_id, text, metadata = item
             
-            # Extract source_id from chunk_id (before _chunk_ if present)
-            if '_chunk_' in chunk_id:
-                source_id = chunk_id.split('_chunk_')[0]
+            # Extract source_id from chunk_id (before separator if present)
+            if self.chunk_separator in chunk_id:
+                source_id = chunk_id.split(self.chunk_separator)[0]
             else:
                 source_id = chunk_id
             

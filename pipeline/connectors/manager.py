@@ -1,6 +1,6 @@
 """Manager class for handling multiple connectors."""
 
-import os
+from pathlib import Path
 import yaml
 from typing import Any, Dict, Optional
 from .base import BaseConnector
@@ -17,7 +17,7 @@ class ConnectorManager:
             config_path: Path to YAML config file. If None, uses 'connector_config.yml'
         """
         if config_path is None:
-            config_path = os.path.join(os.path.dirname(__file__), 'connector_config.yml')
+            config_path = str(Path(__file__).parent / 'connector_config.yml')
         
         self.config_path = config_path
         self._connectors: Dict[str, BaseConnector] = {}
