@@ -1,0 +1,42 @@
+connectors:
+
+  # Gmail API connector
+  gmail:
+    type: gmail
+    credentials_path: "credentials.json"
+    token_path: "token.json"
+    error_message: "Gmail credentials or token file missing"
+
+  # Elasticsearch connector
+  elasticsearch:
+    type: elasticsearch
+    connection:
+      hosts:
+        - "http://localhost:9200"
+      connection_params:
+        request_timeout: 30
+    error_message: "Elasticsearch connection failed"
+
+  postgres_health:
+    type: rdbms
+    db_type: postgresql
+    database: health_db
+    connection_params:
+      connect_timeout: 10
+      application_name: "healthai_health_pipeline"
+
+  postgres_pharma:
+    type: rdbms
+    db_type: postgresql
+    database: pharma_db
+    connection_params:
+      connect_timeout: 10
+      application_name: "healthai_pharma_pipeline"
+
+  postgres_analytics:
+    type: rdbms
+    db_type: postgresql
+    database: analytics
+    connection_params:
+      connect_timeout: 10
+      application_name: "healthai_analytics_pipeline"
